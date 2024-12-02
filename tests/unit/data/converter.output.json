@@ -1,0 +1,151 @@
+{
+  "@xmlns": "http://www.portalfiscal.inf.br/nfe",
+  "infNFe": {
+    "@versao": "4.00",
+    "@Id": "",
+    "ide": {
+      "cUF": "35",
+      "cNF": "12345678",
+      "natOp": "venda",
+      "mod": "65",
+      "serie": "1",
+      "nNF": "1",
+      "dhEmi": "2021-08-04T09:00:00-03:00",
+      "dhSaiEnt": "2021-08-04T09:00:00-03:00",
+      "tpNF": "1",
+      "idDest": "1",
+      "cMunFG": "3550308",
+      "tpImp": "0",
+      "tpEmis": "1",
+      "cDV": "1",
+      "tpAmb": "1",
+      "finNFe": "1",
+      "indFinal": "1",
+      "indPres": "1",
+      "procEmi": "0",
+      "verProc": "1.0"
+    },
+    "emit": {
+      "CNPJ": "99999999999999",
+      "xNome": "Company Name",
+      "xFant": "Company Name",
+      "enderEmit": {
+        "xLgr": "Rua Teste",
+        "nro": "123",
+        "xCpl": "Sala 1",
+        "xBairro": "Centro",
+        "cMun": "3550308",
+        "xMun": "São Paulo",
+        "UF": "SP",
+        "CEP": "12345678",
+        "cPais": "1058",
+        "xPais": "Brasil",
+        "fone": "1234567890"
+      },
+      "IE": "123456789",
+      "IEST": "123456789",
+      "CRT": "3"
+    },
+    "det": [
+      {
+        "@nItem": "1",
+        "prod": {
+          "cProd": "123456",
+          "cEAN": "1234567890123",
+          "xProd": "Product Name",
+          "NCM": "12345678",
+          "CFOP": "1234",
+          "uCom": "UN",
+          "qCom": "1.0000",
+          "vUnCom": "10.00",
+          "vProd": "10.00",
+          "cEANTrib": "1234567890123",
+          "uTrib": "UN",
+          "qTrib": "1.0000",
+          "vUnTrib": "10.00",
+          "indTot": "1"
+        },
+        "imposto": {
+          "vTotTrib": "10.00",
+          "ICMS": {
+            "ICMS00": {
+              "orig": "0",
+              "CST": "00",
+              "modBC": "3",
+              "vBC": "10.00",
+              "pICMS": "18.00",
+              "vICMS": "1.80"
+            }
+          },
+          "PIS": {
+            "PISAliq": {
+              "CST": "01",
+              "vBC": "10.00",
+              "pPIS": "1.65",
+              "vPIS": "0.17"
+            }
+          },
+          "COFINS": {
+            "COFINSAliq": {
+              "CST": "01",
+              "vBC": "10.00",
+              "pCOFINS": "7.60",
+              "vCOFINS": "0.76"
+            }
+          }
+        }
+      }
+    ],
+    "total": {
+      "ICMSTot": {
+        "vBC": "10.00",
+        "vICMS": "1.80",
+        "vICMSDeson": "0.00",
+        "vFCPUFDest": "0.00",
+        "vICMSUFDest": "0.00",
+        "vICMSUFRemet": "0.00",
+        "vFCP": "0.00",
+        "vBCST": "0.00",
+        "vST": "0.00",
+        "vFCPST": "0.00",
+        "vFCPSTRet": "0.00",
+        "vProd": "0.00",
+        "vFrete": "0.00",
+        "vSeg": "0.00",
+        "vDesc": "0.00",
+        "vII": "0.00",
+        "vIPI": "0.00",
+        "vIPIDevol": "0.00",
+        "vPIS": "0.00",
+        "vCOFINS": "0.00",
+        "vOutro": "0.00",
+        "vNF": "123.01"
+      }
+    },
+    "transp": {
+      "modFrete": "9"
+    },
+    "pag": {
+      "detPag": [
+        {
+          "tPag": "03",
+          "vPag": "10.00",
+          "card": {
+            "tpIntegra": "1",
+            "CNPJ": "12345678901234",
+            "tBand": "01",
+            "cAut": "123456"
+          }
+        }
+      ]
+    },
+    "infAdic": {
+      "infAdFisco": "Teste de emissão de NF-e",
+      "infCpl": "Teste de emissão de NF-e"
+    }
+  },
+  "infNFeSupl": {
+    "qrCode": "https://www.sefazvirtual.fazenda.gov.br/NFCe/Consulta?chNFe=35190799999999999999550010000000011000000011&nVersao=100&tpAmb=1&dhEmi=2021-08-04T09:00:00-03:00&vNF=123.01& vICMS=1.80&digVal",
+    "urlChave": "https://www.sefazvirtual.fazenda.gov.br/NFCe/ConsultaChave"
+  }
+}
