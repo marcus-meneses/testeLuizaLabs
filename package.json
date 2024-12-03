@@ -5,7 +5,7 @@
   "scripts": {
     "monitor": "tsx watch ./src/index.ts",
     "tests": "node --import tsx --test tests/**/*Test.ts",
-    "tests:interactive": "node --import tsx --watch --test tests/**/*Test.ts ",
+    "tests:monitor": "node --import tsx --watch --test tests/**/*Test.ts ",
     "build": "rimraf ./dist && npx tsc && tsc-alias",
     "execute": "node ./dist/index.js"
   },
@@ -22,6 +22,7 @@
     "dist": "dist"
   },
   "dependencies": {
-    "mongoose": "^8.8.3"
+    "mongoose": "^8.8.3",
+    "mysql2": "^3.11.5"
   }
 }

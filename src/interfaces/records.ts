@@ -1,4 +1,4 @@
-interface inputRecord {
+export interface inputRecord {
   userId: number;
   userName: string; 
   orderId: number;
@@ -7,14 +7,14 @@ interface inputRecord {
   date: string;
 }
 
-type inputRecordList = inputRecord[];
+export interface inputRecordList extends Array<inputRecord> {};
 
-interface product {
+export interface product {
   product_id: number;
   value: number;
 }
 
-interface order {
+export interface order {
   order_id: number;
   total: number;
   date: string;
@@ -22,7 +22,7 @@ interface order {
 }
 
 
-interface targetRecord {
+export interface targetRecord {
   user_id: number;
   name: string;
   orders: order[];
