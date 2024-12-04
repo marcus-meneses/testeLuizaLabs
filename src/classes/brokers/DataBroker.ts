@@ -8,7 +8,7 @@ import { EventEmitter } from "stream";
 
 export class DataBroker extends EventEmitter implements dataBrokerPrototype {
   broker: brokerPrototype;
-  private connected: connectionStatusFlags = connectionStatusFlags.DISCONNECTED;
+  connected: connectionStatusFlags = connectionStatusFlags.DISCONNECTED;
 
   constructor(broker: brokerPrototype) {
     super();
@@ -66,8 +66,10 @@ export class DataBroker extends EventEmitter implements dataBrokerPrototype {
   }
 
   assertConnection() {
+    this.connected = this.broker.getConnectionStatus();
     if (!this.getConnectionStatus()) {
-      //throw new Error("Database connection offline");
+      console.log("Database connection offline");
+      this.broker.connect();
     }
   }
 }

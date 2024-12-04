@@ -9,7 +9,6 @@ import { EventEmitter } from "stream";
 export class MySQLBroker extends EventEmitter implements brokerPrototype {
   options: connectionOptions;
   connection: mysql.Connection | null = null;
-  connected: connectionStatusFlags = connectionStatusFlags.DISCONNECTED;
 
   constructor(options: connectionOptions) {
     super();
@@ -29,26 +28,11 @@ export class MySQLBroker extends EventEmitter implements brokerPrototype {
         });
 
         this.connection.on("connect", () => {
-          this.connected = connectionStatusFlags.CONNECTED;
           console.log("Connected to MySQL");
         });
-
-        this.connection.on("error", (err) => {
-          this.connected = connectionStatusFlags.DISCONNECTED;
-          console.log("Error connecting to MySQL");
-          setTimeout(() => {
-            this.connect();
-          }, 5000);
-        });
-
-        this.connection.on("end", () => {
-          this.connected = connectionStatusFlags.DISCONNECTED;
-          console.log("Disconnected from MySQL");
-        });
       } catch (error) {
-        setTimeout(() => {
-          this.connect();
-        }, 5000);
+        console.error("Error establishing connection to MySQL server", error);
+        this.connection = null;
       }
     } else {
       console.log("Connection to MySQL already established");
@@ -59,24 +43,27 @@ export class MySQLBroker extends EventEmitter implements brokerPrototype {
 
   disconnect() {
     if (this.connection) {
+      console.log("Closing connection to MySQL server...");
       this.connection.end();
     }
-    this.connected = connectionStatusFlags.DISCONNECTED;
+    return this.getConnectionStatus();
   }
 
   getConnectionStatus(): connectionStatusFlags {
-    return this.connected;
+    return this.connection
+      ? connectionStatusFlags.CONNECTED
+      : connectionStatusFlags.DISCONNECTED;
   }
 
-  getAllRecords(): Promise<object> {
+  async getAllRecords(): Promise<object> {
     return this.runQuery("SELECT * FROM orders");
   }
 
-  getRecordsById(id: string): Promise<object> {
+  async getRecordsById(id: string): Promise<object> {
     return this.runQuery(`SELECT * FROM orders WHERE id = '${id}'`);
   }
 
-  getRecordsByDateInterval(
+  async getRecordsByDateInterval(
     startDate: string,
     endDate: string
   ): Promise<object> {

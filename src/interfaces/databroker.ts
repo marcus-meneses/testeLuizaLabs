@@ -1,4 +1,3 @@
-import { assert } from "console";
 import { EventEmitter } from "stream";
 
 export interface connectionOptions {
@@ -18,8 +17,6 @@ export enum connectionStatusFlags {
 export interface brokerPrototype extends EventEmitter {
   options: connectionOptions;
   connection: any;
-  connectionPool?: any;
-  connected: connectionStatusFlags;
 
   connect(): connectionStatusFlags;
   disconnect(): any;
@@ -31,6 +28,7 @@ export interface brokerPrototype extends EventEmitter {
 
 export interface dataBrokerPrototype {
   broker: brokerPrototype;
+  connected: connectionStatusFlags;
 
   connect(): connectionStatusFlags;
   disconnect(): connectionStatusFlags;

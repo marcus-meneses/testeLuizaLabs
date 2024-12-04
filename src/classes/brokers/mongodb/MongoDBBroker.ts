@@ -7,10 +7,9 @@ import {
 import mongoose, { set } from "mongoose";
 import { EventEmitter } from "stream";
 
-export class MongooseBroker extends EventEmitter implements brokerPrototype {
+export class MongoDBBroker extends EventEmitter implements brokerPrototype {
   options: connectionOptions;
   connection: mongoose.Connection | null = null;
-  connected: connectionStatusFlags = connectionStatusFlags.DISCONNECTED;
 
   constructor(options: connectionOptions) {
     super();
@@ -21,27 +20,17 @@ export class MongooseBroker extends EventEmitter implements brokerPrototype {
     if (!this.getConnectionStatus()) {
       console.log("Establishing connection to MongoDB server...");
 
-      mongoose.connection.on("connected", () => {
-        this.connection = mongoose.connection;
-        this.connected = connectionStatusFlags.CONNECTED;
-        console.log("Connected to MongoDB");
-      });
+      try {
+        mongoose.connection.on("connected", () => {
+          this.connection = mongoose.connection;
+          console.log("Connected to MongoDB");
+        });
 
-      mongoose.connection.on("disconnected", () => {
-        this.connection = null;
-        this.connected = connectionStatusFlags.DISCONNECTED;
-          console.log("Disconnected from MongoDB");
-
-          setTimeout(() => {
-              this.connect();
-          }, 5000);
-
-      });
-
-      mongoose.connect(
-        `mongodb://${this.options.host}:${this.options.port}/${this.options.database}`,
-        { serverSelectionTimeoutMS: 10000 }
-      );
+        mongoose.connect(
+          `mongodb://${this.options.host}:${this.options.port}/${this.options.database}`,
+          { serverSelectionTimeoutMS: 10000 }
+        );
+      } catch (error) {}
     } else {
       console.log("Connection to MongoDB already established");
     }
@@ -53,13 +42,12 @@ export class MongooseBroker extends EventEmitter implements brokerPrototype {
     await mongoose.connection.removeAllListeners();
     mongoose.connection.destroy();
     this.connection?.destroy();
-      this.connected = connectionStatusFlags.DISCONNECTED;
-      console.log("Disconnected from MongoDB");
-
+    console.log("Disconnected from MongoDB");
+    return this.getConnectionStatus();
   }
 
   getConnectionStatus(): connectionStatusFlags {
-    return this.connected;
+    return this.connection? connectionStatusFlags.CONNECTED : connectionStatusFlags.DISCONNECTED;
   }
 
   async getAllRecords(): Promise<object> {

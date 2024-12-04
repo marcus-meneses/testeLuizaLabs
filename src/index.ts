@@ -1,19 +1,19 @@
 import { DataBroker } from "@classes/brokers/DataBroker";
-import { MongooseBroker } from "@classes/brokers/mongodb/MongooseBroker";
+import { MongoDBBroker } from "@classes/brokers/mongodb/MongoDBBroker";
 import { MySQLBroker } from "@classes/brokers/mysql/MySQLBroker";
 import { set } from "mongoose";
 
 const connectionOptions = {
   host: "localhost",
   port: 27017,
-  user: "marcus",
-  password: "$mvmM1985",
+  user: "admin",
+  password: "admin",
   database: "luizaLabs",
   collection: "orders",
 };
 
-const db = new DataBroker(new MongooseBroker(connectionOptions));
-//const db = new DataBroker(new MySQLBroker(connectionOptions));
+//const db = new DataBroker(new MongoDBBroker(connectionOptions));
+const db = new DataBroker(new MySQLBroker(connectionOptions));
 
 db.connect();
 
@@ -26,7 +26,7 @@ db.getAllRecords().then((records) => {
         console.log(records);
       })
       .finally(() => {
-        //db.disconnect();
+        while(!db.disconnect());
       });
   });
 });
