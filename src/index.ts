@@ -19,7 +19,7 @@ db.connect();
 
 db.getAllRecords().then((records) => {
   console.log(records);
-  db.getRecordsById("60b9b3b3b3b3b3b3b3b3b3b3").then((record) => {
+  db.getRecordsById(1).then((record) => {
     console.log(record);
     db.getRecordsByDateInterval("2021-06-04", "2021-06-05")
       .then((records) => {

@@ -1,13 +1,17 @@
 {
-  "name": "@mmeneses/nfemitter",
+  "name": "@mmeneses/testeluizalabs",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "monitor": "tsx watch ./src/index.ts",
+    
     "tests": "node --import tsx --test tests/**/*Test.ts",
     "tests:monitor": "node --import tsx --watch --test tests/**/*Test.ts ",
-    "build": "rimraf ./dist && npx tsc && tsc-alias",
-    "execute": "node ./dist/index.js"
+    "build:dev": "rimraf ./dist && npx tsc && tsc-alias",
+    "build:prod": "rimraf ./dist && npx tsc --sourceMap false && tsc-alias",
+    "execute:dev": "node ./dist/index.js",
+    "execute:prod": "node ./index.js",
+    "execute:monitor": "tsx watch ./src/index.ts",
+    "postbuild": "cp package.json ./dist/package.json && cp package-lock.json ./dist/package-lock.json  && cd ./dist && npm ci --production"
   },
   "devDependencies": {
     "@types/node": "^22.10.1",

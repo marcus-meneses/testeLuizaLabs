@@ -22,7 +22,7 @@ export interface brokerPrototype extends EventEmitter {
   disconnect(): any;
   getConnectionStatus(): connectionStatusFlags;
   getAllRecords(): object;
-  getRecordsById(id: string): object;
+  getRecordsById(id: number): object;
   getRecordsByDateInterval(startDate: string, endDate: string): object;
 }
 
@@ -35,6 +35,6 @@ export interface dataBrokerPrototype {
   getConnectionStatus(): connectionStatusFlags;
   assertConnection(): void;
   getAllRecords(): object;
-  getRecordsById(id: string): object;
+  getRecordsById(id: number): object;
   getRecordsByDateInterval(startDate: string, endDate: string): object;
 }

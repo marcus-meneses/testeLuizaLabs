@@ -52,7 +52,7 @@ export class DataBroker extends EventEmitter implements dataBrokerPrototype {
     return this.broker.getAllRecords();
   }
 
-  async getRecordsById(id: string): Promise<object> {
+  async getRecordsById(id: number): Promise<object> {
     this.assertConnection();
     return this.broker.getRecordsById(id);
   }

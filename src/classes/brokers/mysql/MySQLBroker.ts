@@ -59,8 +59,8 @@ export class MySQLBroker extends EventEmitter implements brokerPrototype {
     return this.runQuery("SELECT * FROM orders");
   }
 
-  async getRecordsById(id: string): Promise<object> {
-    return this.runQuery(`SELECT * FROM orders WHERE id = '${id}'`);
+  async getRecordsById(id: number): Promise<object> {
+    return this.runQuery(`SELECT * FROM orders WHERE id = '?'`,[id]);
   }
 
   async getRecordsByDateInterval(
@@ -68,13 +68,14 @@ export class MySQLBroker extends EventEmitter implements brokerPrototype {
     endDate: string
   ): Promise<object> {
     return this.runQuery(
-      `SELECT * FROM orders WHERE date BETWEEN ${startDate} AND ${endDate}`
+      `SELECT * FROM orders WHERE date BETWEEN ? AND ?`,
+      [startDate, endDate]
     );
   }
 
-  private async runQuery(query: string): Promise<object> {
+  private async runQuery(query: string, parameters:any[] | null = null): Promise<object> {
     return new Promise((resolve, reject) => {
-      this.connection?.query(query, (err, results) => {
+      this.connection?.query(query, parameters, (err, results) => {
         if (err) {
           reject(err);
         } else {

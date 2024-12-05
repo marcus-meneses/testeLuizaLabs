@@ -51,21 +51,21 @@ export class MongoDBBroker extends EventEmitter implements brokerPrototype {
   }
 
   async getAllRecords(): Promise<object> {
-    const targetRecord = await mongoose.model("order", targetRecordSchema);
-    return targetRecord.find({});
+    const mongooseModel = await mongoose.model("order", targetRecordSchema);
+    return mongooseModel.find({});
   }
 
-  async getRecordsById(id: string): Promise<object> {
-    const targetRecord = await mongoose.model("order", targetRecordSchema);
-    return targetRecord.find({ _id: id });
+  async getRecordsById(id: number): Promise<object> {
+    const mongooseModel = await mongoose.model("order", targetRecordSchema);
+    return mongooseModel.find({ id: id });
   }
 
   async getRecordsByDateInterval(
     startDate: string,
     endDate: string
   ): Promise<object> {
-    const targetRecord = await mongoose.model("order", targetRecordSchema);
-    return targetRecord.find({
+    const mongooseModel = await mongoose.model("order", targetRecordSchema);
+    return mongooseModel.find({
       date: {
         $gte: startDate,
         $lte: endDate,
