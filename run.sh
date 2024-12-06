@@ -1,2 +1,2 @@
-npm run build
-npm run execute
+npm run build:dev
+npm run execute:dev

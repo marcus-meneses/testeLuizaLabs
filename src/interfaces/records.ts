@@ -27,3 +27,12 @@ export interface targetRecord {
   name: string;
   orders: order[];
 }
+
+export interface rawRegistry {
+  id_usuario: number;
+  nome: string;
+  id_pedido: number;
+  id_produto: number;
+  valor_produto: number;
+  data_compra: string;
+}

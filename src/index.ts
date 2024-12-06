@@ -6,8 +6,8 @@ import { set } from "mongoose";
 const connectionOptions = {
   host: "localhost",
   port: 27017,
-  user: "admin",
-  password: "admin",
+  user: "marcus",
+  password: "$mvmM1985",
   database: "luizaLabs",
   collection: "orders",
 };
