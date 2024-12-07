@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     
-    "tests": "node --import tsx --test tests/**/*Test.ts",
+    "tests": "node --import tsx --test ./tests/**/*Test.ts",
     "tests:monitor": "node --import tsx --watch --test tests/**/*Test.ts ",
     "build:dev": "rimraf ./dist && npx tsc && tsc-alias",
     "build:prod": "rimraf ./dist && npx tsc --sourceMap false && tsc-alias",

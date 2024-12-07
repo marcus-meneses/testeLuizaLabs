@@ -6,7 +6,7 @@ import * as readline from "readline";
 export class Converter extends EventEmitter {
   private fileStream: fs.ReadStream | null = null;
   private lineReader: readline.Interface | null = null;
-  private dataTree: targetRecord[] | [] = [];
+  private dataTree: targetRecord[] = [];
 
   constructor(fileName: string | null = null) {
     super();
@@ -18,21 +18,80 @@ export class Converter extends EventEmitter {
       });
 
       this.lineReader.on("line", (line) => {
-        console.log("Processing line: " + line);
-        this.buildTree(this.buildEntry(line));
+        if (line.replace(/\s+/g, "").length > 0) {
+          this.buildTree(this.buildEntry(line));
+        }
       });
 
       this.lineReader.on("close", () => {
-        console.log("Finished reading file");
-        console.dir(this.dataTree);
         this.emit("data", this.dataTree);
       });
     }
   }
 
-  buildTree(data: rawRegistry): targetRecord[] | [] {
-    console.log(data);
-    return [];
+  buildTree(data: rawRegistry): boolean {
+    if (!this.dataTree.find((element) => element.user_id === data.id_usuario)) {
+      const newUser: targetRecord = {
+        user_id: data.id_usuario,
+        name: data.nome,
+        orders: [],
+      };
+
+      const newOrder: order = {
+        order_id: data.id_pedido,
+        total: data.valor_produto,
+        date: data.data_compra,
+        products: [],
+      };
+
+      const newProduct = {
+        product_id: data.id_produto,
+        value: data.valor_produto,
+      };
+
+      newOrder.products.push(newProduct);
+      newUser.orders.push(newOrder);
+      this.dataTree.push(newUser);
+    } else {
+      const userIndex = this.dataTree.findIndex(
+        (element) => element.user_id === data.id_usuario
+      );
+
+      if (
+        !this.dataTree[userIndex].orders.find(
+          (element) => element.order_id === data.id_pedido
+        )
+      ) {
+        const newOrder: order = {
+          order_id: data.id_pedido,
+          total: data.valor_produto,
+          date: data.data_compra,
+          products: [],
+        };
+
+        const newProduct = {
+          product_id: data.id_produto,
+          value: data.valor_produto,
+        };
+
+        newOrder.products.push(newProduct);
+        this.dataTree[userIndex].orders.push(newOrder);
+      } else {
+        const orderIndex = this.dataTree[userIndex].orders.findIndex(
+          (element) => element.order_id === data.id_pedido
+        );
+
+        const newProduct = {
+          product_id: data.id_produto,
+          value: data.valor_produto,
+        };
+
+        this.dataTree[userIndex].orders[orderIndex].total += data.valor_produto;
+        this.dataTree[userIndex].orders[orderIndex].products.push(newProduct);
+      }
+    }
+
+    return true;
   }
 
   public buildEntry(data: string): rawRegistry {
@@ -53,7 +112,9 @@ export class Converter extends EventEmitter {
     returnRegistry.nome = data.substring(10, 55).trim();
     returnRegistry.id_pedido = parseInt(data.substring(55, 65));
     returnRegistry.id_produto = parseInt(data.substring(65, 75));
-    returnRegistry.valor_produto = parseFloat(data.substring(75, 87));
+    returnRegistry.valor_produto = parseFloat(
+      Number(data.substring(75, 87)).toFixed(2)
+    );
     returnRegistry.data_compra =
       data.substring(87, 91) +
       "-" +
@@ -69,7 +130,7 @@ export class Converter extends EventEmitter {
   }
 
   private validateData(data: string): boolean {
-    if (data.length < 95) {
+    if (data.length != 95) {
       throw new Error("Invalid data length");
     }
 

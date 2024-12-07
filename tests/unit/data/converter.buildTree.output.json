@@ -1,0 +1,215 @@
+[
+    {
+        "user_id": 80,
+        "name": "Tabitha Kuhn",
+        "orders": [
+            {
+                "order_id": 877,
+                "total": 4700.74,
+                "date": "2021-06-12",
+                "products": [
+                    {
+                        "product_id": 3,
+                        "value": 817.13
+                    },
+                    {
+                        "product_id": 2,
+                        "value": 1633.1
+                    },
+                    {
+                        "product_id": 0,
+                        "value": 1603.44
+                    },
+                    {
+                        "product_id": 3,
+                        "value": 647.07
+                    }
+                ]
+            },
+            {
+                "order_id": 874,
+                "total": 2532.5299999999997,
+                "date": "2021-12-24",
+                "products": [
+                    {
+                        "product_id": 5,
+                        "value": 812.64
+                    },
+                    {
+                        "product_id": 4,
+                        "value": 1251.43
+                    },
+                    {
+                        "product_id": 2,
+                        "value": 310.97
+                    },
+                    {
+                        "product_id": 5,
+                        "value": 157.49
+                    }
+                ]
+            },
+            {
+                "order_id": 875,
+                "total": 3386.0600000000004,
+                "date": "2021-05-25",
+                "products": [
+                    {
+                        "product_id": 1,
+                        "value": 505.55
+                    },
+                    {
+                        "product_id": 4,
+                        "value": 1894.38
+                    },
+                    {
+                        "product_id": 4,
+                        "value": 599.42
+                    },
+                    {
+                        "product_id": 4,
+                        "value": 386.71
+                    }
+                ]
+            },
+            {
+                "order_id": 871,
+                "total": 4593.13,
+                "date": "2021-10-15",
+                "products": [
+                    {
+                        "product_id": 4,
+                        "value": 1764.09
+                    },
+                    {
+                        "product_id": 4,
+                        "value": 168.3
+                    },
+                    {
+                        "product_id": 5,
+                        "value": 1860.89
+                    },
+                    {
+                        "product_id": 2,
+                        "value": 799.85
+                    }
+                ]
+            },
+            {
+                "order_id": 872,
+                "total": 3209.11,
+                "date": "2021-04-07",
+                "products": [
+                    {
+                        "product_id": 5,
+                        "value": 584.71
+                    },
+                    {
+                        "product_id": 1,
+                        "value": 1875.39
+                    },
+                    {
+                        "product_id": 4,
+                        "value": 589.12
+                    },
+                    {
+                        "product_id": 2,
+                        "value": 159.89
+                    }
+                ]
+            },
+            {
+                "order_id": 876,
+                "total": 4029.42,
+                "date": "2021-08-18",
+                "products": [
+                    {
+                        "product_id": 0,
+                        "value": 1129.38
+                    },
+                    {
+                        "product_id": 4,
+                        "value": 1236.17
+                    },
+                    {
+                        "product_id": 6,
+                        "value": 49.17
+                    },
+                    {
+                        "product_id": 3,
+                        "value": 1614.7
+                    }
+                ]
+            },
+            {
+                "order_id": 869,
+                "total": 3730.7200000000003,
+                "date": "2021-12-04",
+                "products": [
+                    {
+                        "product_id": 4,
+                        "value": 579.07
+                    },
+                    {
+                        "product_id": 3,
+                        "value": 513.36
+                    },
+                    {
+                        "product_id": 4,
+                        "value": 1075.15
+                    },
+                    {
+                        "product_id": 0,
+                        "value": 1563.14
+                    }
+                ]
+            },
+            {
+                "order_id": 873,
+                "total": 4574.18,
+                "date": "2021-05-08",
+                "products": [
+                    {
+                        "product_id": 3,
+                        "value": 1945.93
+                    },
+                    {
+                        "product_id": 1,
+                        "value": 613.67
+                    },
+                    {
+                        "product_id": 5,
+                        "value": 1580.02
+                    },
+                    {
+                        "product_id": 2,
+                        "value": 434.56
+                    }
+                ]
+            },
+            {
+                "order_id": 870,
+                "total": 3692.87,
+                "date": "2021-11-07",
+                "products": [
+                    {
+                        "product_id": 5,
+                        "value": 1499.07
+                    },
+                    {
+                        "product_id": 3,
+                        "value": 159.55
+                    },
+                    {
+                        "product_id": 2,
+                        "value": 533.99
+                    },
+                    {
+                        "product_id": 3,
+                        "value": 1500.26
+                    }
+                ]
+            }
+        ]
+    }
+]
