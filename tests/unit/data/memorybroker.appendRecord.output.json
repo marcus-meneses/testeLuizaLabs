@@ -1,0 +1,17 @@
+{
+    "user_id": 70,
+    "name": "Palmer Prosacco",
+    "orders": [
+        {
+            "order_id": 753,
+            "total": 1836.74,
+            "date": "2021-03-08",
+            "products": [
+                {
+                    "product_id": 3,
+                    "value": 1836.74
+                }
+            ]
+        }
+    ]
+}

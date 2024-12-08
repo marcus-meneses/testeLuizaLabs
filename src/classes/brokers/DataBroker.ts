@@ -3,6 +3,7 @@ import {
   connectionStatusFlags,
   dataBrokerPrototype,
 } from "@interfaces/databroker";
+import { insertMessage, targetRecord } from "@interfaces/records";
 
 import { EventEmitter } from "stream";
 
@@ -47,23 +48,38 @@ export class DataBroker extends EventEmitter implements dataBrokerPrototype {
     return this.connected;
   }
 
-  async getAllRecords(): Promise<object> {
+  async getAllRecords()  {
     this.assertConnection();
     return this.broker.getAllRecords();
   }
 
-  async getRecordsById(id: number): Promise<object> {
+  async getRecordsByUserId(id: number)  {
     this.assertConnection();
-    return this.broker.getRecordsById(id);
+    return this.broker.getRecordsByUserId(id);
+  }
+
+  getRecordsByOrderId(id: number): Promise<targetRecord[] | []> {
+    this.assertConnection();
+    throw new Error("Method not implemented.");
   }
 
   async getRecordsByDateInterval(
     startDate: string,
     endDate: string
-  ): Promise<object> {
+  ) {
     this.assertConnection();
     return this.broker.getRecordsByDateInterval(startDate, endDate);
   }
+
+  appendRecord(record: targetRecord): insertMessage {
+    this.assertConnection();
+   return this.broker.appendRecord(record);
+  }
+  appendRecords(records: targetRecord[]): insertMessage {
+    this.assertConnection();
+    return this.broker.appendRecords(records);
+  }
+
 
   assertConnection() {
     this.connected = this.broker.getConnectionStatus();
@@ -72,4 +88,5 @@ export class DataBroker extends EventEmitter implements dataBrokerPrototype {
       this.broker.connect();
     }
   }
+
 }

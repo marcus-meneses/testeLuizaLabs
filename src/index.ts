@@ -1,32 +1,18 @@
-import { DataBroker } from "@classes/brokers/DataBroker";
-import { MongoDBBroker } from "@classes/brokers/mongodb/MongoDBBroker";
-import { MySQLBroker } from "@classes/brokers/mysql/MySQLBroker";
-import { set } from "mongoose";
+import { Routes } from "@classes/routes/Routes";
+import express from "express";
 
-const connectionOptions = {
-  host: "localhost",
-  port: 27017,
-  user: "marcus",
-  password: "$mvmM1985",
-  database: "luizaLabs",
-  collection: "orders",
-};
+const routes = new Routes();
 
-//const db = new DataBroker(new MongoDBBroker(connectionOptions));
-const db = new DataBroker(new MySQLBroker(connectionOptions));
+const app = express();
+app.use(express.json());
 
-db.connect();
+app.all("/",routes.info);
+app.put("/records",routes.appendRecords);
+app.get("/records",routes.getAllRecords);
+app.get("/records/user/:id",routes.getRecordsByUserId);
+app.get("/records/order/:id",routes.getRecordsByOrderId);
+app.get("/records/date/:startDate/:endDate",routes.getRecordsByDateInterval);
 
-db.getAllRecords().then((records) => {
-  console.log(records);
-  db.getRecordsById(1).then((record) => {
-    console.log(record);
-    db.getRecordsByDateInterval("2021-06-04", "2021-06-05")
-      .then((records) => {
-        console.log(records);
-      })
-      .finally(() => {
-        while(!db.disconnect());
-      });
-  });
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
 });

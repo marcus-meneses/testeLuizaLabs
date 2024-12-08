@@ -3,6 +3,7 @@ import {
   connectionOptions,
   connectionStatusFlags,
 } from "@interfaces/databroker";
+import { insertMessage, targetRecord } from "@interfaces/records";
 import mysql from "mysql2";
 import { EventEmitter } from "stream";
 
@@ -55,25 +56,42 @@ export class MySQLBroker extends EventEmitter implements brokerPrototype {
       : connectionStatusFlags.DISCONNECTED;
   }
 
-  async getAllRecords(): Promise<object> {
-    return this.runQuery("SELECT * FROM orders");
+  async getAllRecords(): Promise<targetRecord[] | []> {
+    return this.runQuery("SELECT * FROM orders") as Promise<
+      targetRecord[] | []
+    >;
   }
 
-  async getRecordsById(id: number): Promise<object> {
-    return this.runQuery(`SELECT * FROM orders WHERE id = '?'`,[id]);
+  getRecordsByUserId(id: number): Promise<targetRecord[] | []> {
+    return this.runQuery(`SELECT * FROM orders WHERE id = '?'`, [
+      id,
+    ]) as Promise<targetRecord[] | []>;
+  }
+  getRecordsByOrderId(id: number): Promise<targetRecord[] | []> {
+    throw new Error("Method not implemented.");
   }
 
   async getRecordsByDateInterval(
     startDate: string,
     endDate: string
-  ): Promise<object> {
-    return this.runQuery(
-      `SELECT * FROM orders WHERE date BETWEEN ? AND ?`,
-      [startDate, endDate]
-    );
+  ): Promise<targetRecord[] | []> {
+    return this.runQuery(`SELECT * FROM orders WHERE date BETWEEN ? AND ?`, [
+      startDate,
+      endDate,
+    ]) as Promise<targetRecord[] | []>;
   }
 
-  private async runQuery(query: string, parameters:any[] | null = null): Promise<object> {
+  appendRecord(record: targetRecord): insertMessage {
+    throw new Error("Method not implemented.");
+  }
+  appendRecords(records: targetRecord[]): insertMessage {
+    throw new Error("Method not implemented.");
+  }
+
+  private async runQuery(
+    query: string,
+    parameters: any[] | null = null
+  ): Promise<object> {
     return new Promise((resolve, reject) => {
       this.connection?.query(query, parameters, (err, results) => {
         if (err) {

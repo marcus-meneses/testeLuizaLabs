@@ -1,4 +1,5 @@
 import { EventEmitter } from "stream";
+import { insertMessage, targetRecord } from "./records";
 
 export interface connectionOptions {
   host: string;
@@ -14,27 +15,29 @@ export enum connectionStatusFlags {
   DISCONNECTED = 0,
 }
 
-export interface brokerPrototype extends EventEmitter {
-  options: connectionOptions;
-  connection: any;
-
-  connect(): connectionStatusFlags;
-  disconnect(): any;
-  getConnectionStatus(): connectionStatusFlags;
-  getAllRecords(): object;
-  getRecordsById(id: number): object;
-  getRecordsByDateInterval(startDate: string, endDate: string): object;
-}
-
-export interface dataBrokerPrototype {
-  broker: brokerPrototype;
-  connected: connectionStatusFlags;
+export interface commonParameters extends EventEmitter {
 
   connect(): connectionStatusFlags;
   disconnect(): connectionStatusFlags;
   getConnectionStatus(): connectionStatusFlags;
+  getAllRecords(): Promise<targetRecord[] | []>;
+  getRecordsByUserId(id: number):  Promise<targetRecord[] | []>;
+  getRecordsByOrderId(id: number):  Promise<targetRecord[] | []>;
+  getRecordsByDateInterval(startDate: string, endDate: string):  Promise<targetRecord[] | []>;
+  appendRecord(record: targetRecord): insertMessage;
+  appendRecords(records: targetRecord[]): insertMessage;
+}
+
+export interface brokerPrototype extends commonParameters {
+  options: connectionOptions;
+  connection: any;
+
+
+}
+
+export interface dataBrokerPrototype extends commonParameters {
+  broker: brokerPrototype;
+  connected: connectionStatusFlags;
+
   assertConnection(): void;
-  getAllRecords(): object;
-  getRecordsById(id: number): object;
-  getRecordsByDateInterval(startDate: string, endDate: string): object;
 }

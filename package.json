@@ -3,17 +3,18 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    
-    "tests": "node --import tsx --test ./tests/**/*Test.ts",
+    "tests:all": "node --import tsx --test ./tests/**/*Test.ts",
+    "tests:only": "node --import tsx --test --test-only ./tests/**/*Test.ts",
     "tests:monitor": "node --import tsx --watch --test tests/**/*Test.ts ",
-    "build:dev": "rimraf ./dist && npx tsc && tsc-alias",
-    "build:prod": "rimraf ./dist && npx tsc --sourceMap false && tsc-alias",
-    "execute:dev": "node ./dist/index.js",
-    "execute:prod": "node ./index.js",
-    "execute:monitor": "tsx watch ./src/index.ts",
+    "build:dev": "rimraf ./dist && npx tsc && mkdir ./dist/tmp && tsc-alias",
+    "build:prod": "rimraf ./dist && npx tsc --sourceMap false && mkdir ./dist/tmp && tsc-alias",
+    "dev": "npm run build:dev && node ./dist/index.js",
+    "prod": "npm run build:prod && node ./dist/index.js",
+    "dev:monitor": "npm run build:dev && tsx watch ./src/index.ts",
     "postbuild": "cp package.json ./dist/package.json && cp package-lock.json ./dist/package-lock.json  && cd ./dist && npm ci --production"
   },
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/node": "^22.10.1",
     "rimraf": "^6.0.1",
     "tsc-alias": "^1.8.10",
@@ -26,7 +27,9 @@
     "dist": "dist"
   },
   "dependencies": {
+    "express": "^4.21.2",
     "mongoose": "^8.8.3",
+    "multer": "^1.4.5-lts.1",
     "mysql2": "^3.11.5"
   }
 }

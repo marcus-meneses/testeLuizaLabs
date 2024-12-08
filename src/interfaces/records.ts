@@ -21,6 +21,13 @@ export interface order {
   products: product[];
 }
 
+export interface insertMessage {
+  success: boolean;
+  message: string;
+  inserted_users: number;
+  inserted_orders: number;
+  inserted_products: number;
+}
 
 export interface targetRecord {
   user_id: number;

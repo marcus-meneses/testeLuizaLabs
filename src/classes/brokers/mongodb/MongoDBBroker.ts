@@ -4,6 +4,7 @@ import {
   connectionOptions,
   connectionStatusFlags,
 } from "@interfaces/databroker";
+import { insertMessage, targetRecord } from "@interfaces/records";
 import mongoose, { set } from "mongoose";
 import { EventEmitter } from "stream";
 
@@ -38,8 +39,8 @@ export class MongoDBBroker extends EventEmitter implements brokerPrototype {
     return this.getConnectionStatus();
   }
 
-  async disconnect() {
-    await mongoose.connection.removeAllListeners();
+  disconnect() {
+    mongoose.connection.removeAllListeners();
     mongoose.connection.destroy();
     this.connection?.destroy();
     console.log("Disconnected from MongoDB");
@@ -50,20 +51,27 @@ export class MongoDBBroker extends EventEmitter implements brokerPrototype {
     return this.connection? connectionStatusFlags.CONNECTED : connectionStatusFlags.DISCONNECTED;
   }
 
-  async getAllRecords(): Promise<object> {
+  async getAllRecords():  Promise<targetRecord[] | []> {
     const mongooseModel = await mongoose.model("order", targetRecordSchema);
     return mongooseModel.find({});
   }
 
-  async getRecordsById(id: number): Promise<object> {
+  async getRecordsById(id: number):  Promise<targetRecord[] | []> {
     const mongooseModel = await mongoose.model("order", targetRecordSchema);
     return mongooseModel.find({ id: id });
+  }
+
+  getRecordsByUserId(id: number): Promise<targetRecord[] | []> {
+    throw new Error("Method not implemented.");
+  }
+  getRecordsByOrderId(id: number): Promise<targetRecord[] | []> {
+    throw new Error("Method not implemented.");
   }
 
   async getRecordsByDateInterval(
     startDate: string,
     endDate: string
-  ): Promise<object> {
+  ):  Promise<targetRecord[] | []> {
     const mongooseModel = await mongoose.model("order", targetRecordSchema);
     return mongooseModel.find({
       date: {
@@ -71,5 +79,13 @@ export class MongoDBBroker extends EventEmitter implements brokerPrototype {
         $lte: endDate,
       },
     });
+  }
+
+
+  appendRecord(record: targetRecord): insertMessage {
+    throw new Error("Method not implemented.");
+  }
+  appendRecords(records: targetRecord[]): insertMessage {
+    throw new Error("Method not implemented.");
   }
 }
