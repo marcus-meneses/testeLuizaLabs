@@ -10,7 +10,7 @@ test.suite("DataBroker:MemoryBroker", () => {
   
   test("Databroker can push all data transparently through memory broker", () => {
     const memoryBroker = new MemoryBroker();
-    const inputFile = "./tests/unit/data/converter.buildTree.time.input.txt";
+    const inputFile =  __dirname+"/data/converter.buildTree.time.input.txt";
     const converter = new Converter(inputFile);
     const db = new DataBroker(memoryBroker);
 
@@ -60,7 +60,7 @@ test.suite("DataBroker:FileBroker", () => {
   
   test("Databroker can push all data transparently through file broker", () => {
     const memoryBroker = new MemoryBroker();
-    const inputFile = "./tests/unit/data/converter.buildTree.time.input.txt";
+    const inputFile =  __dirname+"/data/converter.buildTree.time.input.txt";
     const converter = new Converter(inputFile);
     const db = new DataBroker(memoryBroker);
 

@@ -48,7 +48,7 @@ export class MemoryBroker extends EventEmitter implements brokerPrototype {
     return this.records.filter((record) => record.user_id === id);
   }
 
-  getRecordsByOrderId(id: number): Promise<targetRecord[] | []> {
+  async getRecordsByOrderId(id: number): Promise<targetRecord[] | []> {
     throw new Error("Method not implemented.");
   }
 
