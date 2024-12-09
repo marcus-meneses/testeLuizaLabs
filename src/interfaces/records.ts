@@ -9,24 +9,25 @@ export interface inputRecord {
 
 export interface inputRecordList extends Array<inputRecord> {};
 
+export interface rawRegistry {
+  id_usuario: number;
+  nome: string;
+  id_pedido: number;
+  id_produto: number;
+  valor_produto: number;
+  data_compra: string;
+}
+
 export interface product {
   product_id: number;
-  value: number;
+  value: string;
 }
 
 export interface order {
   order_id: number;
-  total: number;
+  total: string;
   date: string;
   products: product[];
-}
-
-export interface insertMessage {
-  success: boolean;
-  message: string;
-  inserted_users: number;
-  inserted_orders: number;
-  inserted_products: number;
 }
 
 export interface targetRecord {
@@ -35,11 +36,10 @@ export interface targetRecord {
   orders: order[];
 }
 
-export interface rawRegistry {
-  id_usuario: number;
-  nome: string;
-  id_pedido: number;
-  id_produto: number;
-  valor_produto: number;
-  data_compra: string;
+export interface insertMessage {
+  success: boolean;
+  message: string;
+  inserted_users: number;
+  inserted_orders: number;
+  inserted_products: number;
 }

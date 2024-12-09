@@ -1,17 +1,18 @@
 {
   "name": "@mmeneses/testeluizalabs",
+  "email": "marcusmeneses.email@gmail.com",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "tests:all": "node --import tsx --test ./tests/**/*Test.ts",
-    "tests:only": "node --import tsx --test --test-only ./tests/**/*Test.ts",
+    "tests:all": "node --import tsx --test ./src/tests/**/*Test.ts",
+    "tests:only": "node --import tsx --test --test-only ./src/tests/**/*Test.ts",
     "tests:monitor": "node --import tsx --watch --test tests/**/*Test.ts ",
-    "build:dev": "rimraf ./dist && npx tsc && mkdir ./dist/tmp && tsc-alias",
-    "build:prod": "rimraf ./dist && npx tsc --sourceMap false && mkdir ./dist/tmp && tsc-alias",
+    "build:dev": "rimraf ./dist && npx tsc && mkdir ./dist/tmp && npm run postbuild && tsc-alias",
+    "build:prod": "rimraf ./dist && npx tsc --sourceMap false && mkdir ./dist/tmp && rimraf ./dist/tests && npm run postbuild && tsc-alias",
     "dev": "npm run build:dev && node ./dist/index.js",
     "prod": "npm run build:prod && node ./dist/index.js",
-    "dev:monitor": "npm run build:dev && tsx watch ./src/index.ts",
-    "postbuild": "cp package.json ./dist/package.json && cp package-lock.json ./dist/package-lock.json  && cd ./dist && npm ci --production"
+    "postbuild": "",
+    "docker:deploy": "npm install && npm run build:prod && docker build -t testeluizalabs . && docker run -p 3000:3000 testeluizalabs"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
@@ -24,6 +25,7 @@
     "typescript": "^5.7.2"
   },
   "paths": {
+    "root": ".",
     "src": "src",
     "dist": "dist"
   },

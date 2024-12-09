@@ -4,6 +4,7 @@ import {
   dataBrokerPrototype,
 } from "@interfaces/databroker";
 import { insertMessage, targetRecord } from "@interfaces/records";
+import e from "express";
 
 import { EventEmitter } from "stream";
 
@@ -60,7 +61,7 @@ export class DataBroker extends EventEmitter implements dataBrokerPrototype {
 
   getRecordsByOrderId(id: number): Promise<targetRecord[] | []> {
     this.assertConnection();
-    throw new Error("Method not implemented.");
+    return this.broker.getRecordsByOrderId(id);
   }
 
   async getRecordsByDateInterval(
@@ -68,16 +69,21 @@ export class DataBroker extends EventEmitter implements dataBrokerPrototype {
     endDate: string
   ) {
     this.assertConnection();
+    if (startDate === undefined || endDate === undefined) {
+      throw new Error("Invalid date interval");
+    } else if (new Date(startDate) >= new Date(endDate)) {
+      throw new Error("Invalid date interval");
+    }
     return this.broker.getRecordsByDateInterval(startDate, endDate);
   }
 
-  appendRecord(record: targetRecord): insertMessage {
+  async appendRecord(record: targetRecord): Promise<insertMessage> {
     this.assertConnection();
-   return this.broker.appendRecord(record);
+   return await this.broker.appendRecord(record);
   }
-  appendRecords(records: targetRecord[]): insertMessage {
+  async appendRecords(records: targetRecord[]): Promise<insertMessage> {
     this.assertConnection();
-    return this.broker.appendRecords(records);
+    return await this.broker.appendRecords(records);
   }
 
 

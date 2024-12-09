@@ -24,8 +24,8 @@ export interface commonParameters extends EventEmitter {
   getRecordsByUserId(id: number):  Promise<targetRecord[] | []>;
   getRecordsByOrderId(id: number):  Promise<targetRecord[] | []>;
   getRecordsByDateInterval(startDate: string, endDate: string):  Promise<targetRecord[] | []>;
-  appendRecord(record: targetRecord): insertMessage;
-  appendRecords(records: targetRecord[]): insertMessage;
+  appendRecord(record: targetRecord): Promise<insertMessage> | insertMessage;
+  appendRecords(records: targetRecord[]): Promise<insertMessage> | insertMessage;
 }
 
 export interface brokerPrototype extends commonParameters {

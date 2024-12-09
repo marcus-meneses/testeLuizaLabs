@@ -49,24 +49,33 @@ export class MemoryBroker extends EventEmitter implements brokerPrototype {
   }
 
   async getRecordsByOrderId(id: number): Promise<targetRecord[] | []> {
-    throw new Error("Method not implemented.");
+    const filteredRecords = structuredClone(this.records);
+    return filteredRecords.filter((record) => {
+      record.orders = record.orders.filter((order) => order.order_id === id);
+      return record.orders.length > 0;
+    });
   }
 
   async getRecordsByDateInterval(
     startDate: string,
     endDate: string
   ): Promise<targetRecord[] | []> {
-    return this.records.filter(
-      (record) =>
-        record.orders.filter(
-          (order) =>
-            new Date(order.date) >= new Date(startDate) &&
-            new Date(order.date) <= new Date(endDate)
-        ).length > 0
-    );
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const filteredRecords = structuredClone(this.records);
+    return filteredRecords.filter((record) => {
+      record.orders = record.orders.filter((order) => {
+        const orderDate = new Date(order.date);
+        return (
+           orderDate >= start &&
+           orderDate <= end
+        );
+      });
+      return record.orders.length > 0;
+    });
   }
 
-  appendRecord(record: targetRecord): insertMessage {
+  async appendRecord(record: targetRecord): Promise<insertMessage> {
     let insertMessage: insertMessage = {
       success: true,
       message: "no insertions",
@@ -83,11 +92,15 @@ export class MemoryBroker extends EventEmitter implements brokerPrototype {
         this.records.push(record);
         insertMessage.inserted_users++;
         insertMessage.inserted_orders += record.orders.length;
-        record.orders.forEach((order) => {
-          insertMessage.inserted_products += order.products.length;
-        });
+        insertMessage.inserted_products = record.orders.reduce(
+          (acc, order) => acc + order.products.length,
+          0
+        );
         insertMessage.message = "data inserted";
       } else {
+        if (record.name !== this.records[userIndex].name) {
+          throw new Error("User name mismatch, upsert illegal");
+        }
         record.orders.forEach((order) => {
           const orderIndex = this.records[userIndex].orders.findIndex(
             (o) => o.order_id === order.order_id
@@ -102,6 +115,11 @@ export class MemoryBroker extends EventEmitter implements brokerPrototype {
               const productIndex = this.records[userIndex].orders[
                 orderIndex
               ].products.findIndex((p) => p.product_id === product.product_id);
+
+              this.records[userIndex].orders[orderIndex].total = (
+                parseFloat(this.records[userIndex].orders[orderIndex].total) +
+                parseFloat(product.value)
+              ).toFixed(2);
 
               this.records[userIndex].orders[orderIndex].products.push(product);
               insertMessage.inserted_products++;
@@ -125,7 +143,7 @@ export class MemoryBroker extends EventEmitter implements brokerPrototype {
     return insertMessage;
   }
 
-  appendRecords(records: targetRecord[]): insertMessage {
+  async appendRecords(records: targetRecord[]): Promise<insertMessage> {
     let insertMessage: insertMessage = {
       success: true,
       message: "",
@@ -134,8 +152,8 @@ export class MemoryBroker extends EventEmitter implements brokerPrototype {
       inserted_products: 0,
     };
 
-    records.forEach((record) => {
-      const result = this.appendRecord(record);
+    records.forEach(async (record) => {
+      const result = await this.appendRecord(record);
       insertMessage.inserted_users += result.inserted_users;
       insertMessage.inserted_orders += result.inserted_orders;
       insertMessage.inserted_products += result.inserted_products;

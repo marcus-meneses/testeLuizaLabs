@@ -11,21 +11,25 @@ export class Converter extends EventEmitter {
   constructor(fileName: string | null = null) {
     super();
 
-    if (fileName != null) {
-      this.fileStream = fs.createReadStream(fileName);
-      this.lineReader = readline.createInterface({
-        input: this.fileStream,
-      });
+    try {
+      if (fileName != null) {
+        this.fileStream = fs.createReadStream(fileName);
+        this.lineReader = readline.createInterface({
+          input: this.fileStream,
+        });
 
-      this.lineReader.on("line", (line) => {
-        if (line.replace(/\s+/g, "").length > 0) {
-          this.buildTree(this.buildEntry(line));
-        }
-      });
+        this.lineReader.on("line", (line) => {
+          if (line.replace(/\s+/g, "").length > 0) {
+            this.buildTree(this.buildEntry(line));
+          }
+        });
 
-      this.lineReader.on("close", () => {
-        this.emit("data", this.dataTree);
-      });
+        this.lineReader.on("close", () => {
+          this.emit("data", this.dataTree);
+        });
+      }
+    } catch (error) {
+      this.emit("error", error);
     }
   }
 
@@ -39,14 +43,14 @@ export class Converter extends EventEmitter {
 
       const newOrder: order = {
         order_id: data.id_pedido,
-        total: data.valor_produto,
+        total: data.valor_produto.toFixed(2),
         date: data.data_compra,
         products: [],
       };
 
       const newProduct = {
         product_id: data.id_produto,
-        value: data.valor_produto,
+        value: data.valor_produto.toFixed(2),
       };
 
       newOrder.products.push(newProduct);
@@ -64,14 +68,14 @@ export class Converter extends EventEmitter {
       ) {
         const newOrder: order = {
           order_id: data.id_pedido,
-          total: data.valor_produto,
+          total: data.valor_produto.toFixed(2),
           date: data.data_compra,
           products: [],
         };
 
         const newProduct = {
           product_id: data.id_produto,
-          value: data.valor_produto,
+          value: data.valor_produto.toFixed(2),
         };
 
         newOrder.products.push(newProduct);
@@ -83,10 +87,13 @@ export class Converter extends EventEmitter {
 
         const newProduct = {
           product_id: data.id_produto,
-          value: data.valor_produto,
+          value: data.valor_produto.toFixed(2),
         };
 
-        this.dataTree[userIndex].orders[orderIndex].total += data.valor_produto;
+        this.dataTree[userIndex].orders[orderIndex].total = (
+          parseFloat(this.dataTree[userIndex].orders[orderIndex].total) +
+          parseFloat(newProduct.value)
+        ).toFixed(2);
         this.dataTree[userIndex].orders[orderIndex].products.push(newProduct);
       }
     }

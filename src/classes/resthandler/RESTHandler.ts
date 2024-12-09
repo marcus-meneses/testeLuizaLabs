@@ -1,13 +1,14 @@
 import { DataBroker } from "@classes/brokers/DataBroker";
-import { MemoryBroker } from "@classes/brokers/memory/MemoryBroker";
+import { MongoDBBroker } from "@classes/brokers/mongodb/MongoDBBroker";
 import { Converter } from "@classes/converter/Converter";
 import { Request, Response, NextFunction, Router } from "express";
+import fs from "fs";
 
 export class RESTHandler {
   broker: DataBroker;
 
   constructor() {
-    this.broker = new DataBroker(new MemoryBroker());
+    this.broker = new DataBroker(new MongoDBBroker());
     this.broker.connect();
   }
 
@@ -17,10 +18,26 @@ export class RESTHandler {
     next: NextFunction
   ) => {
     const converter = new Converter(req.file?.path);
-    converter.on("data", async (data) => {
-      const inputReport = this.broker.appendRecords(data);
-      res.send(inputReport);
-      next();
+    converter.on("data", (data) => {
+      this.broker
+        .appendRecords(data)
+        .then((inputReport) => {
+          res.send(inputReport);
+          next();
+        })
+        .catch((error) => {
+          next(error);
+        })
+        .finally(() => {
+          if (req.file?.path) {
+            fs.rmSync(req.file.path);
+          }
+        });
+    });
+
+    converter.on("error", (error) => {
+      console.log("Error on conversion");
+      next(error);
     });
   };
 
@@ -29,9 +46,15 @@ export class RESTHandler {
     res: Response,
     next: NextFunction
   ) => {
-    const data = await this.broker.getAllRecords();
-    res.send(data);
-    next();
+    this.broker
+      .getAllRecords()
+      .then((data) => {
+        res.send(data);
+        next();
+      })
+      .catch((error) => {
+        next(error);
+      });
   };
 
   public getRecordsByUserId = async (
@@ -39,9 +62,15 @@ export class RESTHandler {
     res: Response,
     next: NextFunction
   ) => {
-    const data = await this.broker.getRecordsByUserId(Number(req.params.id));
-    res.send(data);
-    next();
+    this.broker
+      .getRecordsByUserId(Number(req.params.id))
+      .then((data) => {
+        res.send(data);
+        next();
+      })
+      .catch((error) => {
+        next(error);
+      });
   };
 
   public getRecordsByOrderId = async (
@@ -49,9 +78,15 @@ export class RESTHandler {
     res: Response,
     next: NextFunction
   ) => {
-    const data = await this.broker.getRecordsByOrderId(Number(req.params.id));
-    res.send(data);
-    next();
+    this.broker
+      .getRecordsByOrderId(Number(req.params.id))
+      .then((data) => {
+        res.send(data);
+        next();
+      })
+      .catch((error) => {
+        next(error);
+      });
   };
 
   public getRecordsByDateInterval = async (
@@ -59,12 +94,15 @@ export class RESTHandler {
     res: Response,
     next: NextFunction
   ) => {
-    const data = await this.broker.getRecordsByDateInterval(
-      req.params.startDate,
-      req.params.endDate
-    );
-    res.send(data);
-    next();
+    this.broker
+      .getRecordsByDateInterval(req.params.startDate, req.params.endDate)
+      .then((data) => {
+        res.send(data);
+        next();
+      })
+      .catch((error) => {
+        next(error);
+      });
   };
 
   public info = async (req: Request, res: Response, next: NextFunction) => {

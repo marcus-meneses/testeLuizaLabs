@@ -6,17 +6,17 @@ import { insertMessage } from "@interfaces/records";
 import fs from "fs";
 
 test.suite("MemoryBroker", () => {
-  test("Memory broker can deal with single record insertion", () => {
+  test("Memory broker can deal with single record insertion", async () => {
     const converter = new Converter();
     const memoryBroker = new MemoryBroker();
     const inputData = fs.readFileSync(
-       __dirname+"/data/converter.buildEntry.valid.input.txt",
+      __dirname + "/data/converter.buildEntry.valid.input.txt",
       "utf-8"
     );
 
     const outputExpected = JSON.parse(
       fs.readFileSync(
-         __dirname+"/data/memorybroker.appendRecord.output.json",
+        __dirname + "/data/memorybroker.appendRecord.output.json",
         "utf-8"
       )
     );
@@ -24,7 +24,7 @@ test.suite("MemoryBroker", () => {
     const record = converter.buildEntry(inputData);
     converter.buildTree(record);
     const treeData = converter.getTree();
-    memoryBroker.appendRecord(treeData[0]);
+    await memoryBroker.appendRecord(treeData[0]);
     const mrecords = memoryBroker.getAllRecords().then((records) => {
       assert.equal(JSON.stringify(records), JSON.stringify([outputExpected]));
     });
@@ -35,16 +35,16 @@ test.suite("MemoryBroker", () => {
 
     const outputExpected = JSON.parse(
       fs.readFileSync(
-         __dirname+"/data/converter.buildTree.output.json",
+        __dirname + "/data/converter.buildTree.output.json",
         "utf-8"
       )
     );
 
-    const inputFile =  __dirname+"/data/converter.buildTree.valid.input.txt";
+    const inputFile = __dirname + "/data/converter.buildTree.valid.input.txt";
     const converter = new Converter(inputFile);
 
-    converter.on("data", (data) => {
-      memoryBroker.appendRecords(converter.getTree());
+    converter.on("data", async (data) => {
+      await memoryBroker.appendRecords(converter.getTree());
       memoryBroker.getAllRecords().then((records) => {
         assert.equal(JSON.stringify(records), JSON.stringify(outputExpected));
       });
@@ -53,7 +53,7 @@ test.suite("MemoryBroker", () => {
 
   test("Memory broker can deal with edge-case record insertion (validate report data)", () => {
     const memoryBroker = new MemoryBroker();
-    const inputFile =  __dirname+"/data/converter.buildTree.time.input.txt";
+    const inputFile = __dirname + "/data/converter.buildTree.time.input.txt";
     const converter = new Converter(inputFile);
 
     const expectedReport: insertMessage = {
@@ -64,8 +64,8 @@ test.suite("MemoryBroker", () => {
       inserted_products: 3870,
     };
 
-    converter.on("data", (data) => {
-      const inputLog = memoryBroker.appendRecords(converter.getTree());
+    converter.on("data", async (data) => {
+      const inputLog = await memoryBroker.appendRecords(converter.getTree());
       memoryBroker.getAllRecords().then((records) => {
         assert.equal(JSON.stringify(inputLog), JSON.stringify(expectedReport));
       });

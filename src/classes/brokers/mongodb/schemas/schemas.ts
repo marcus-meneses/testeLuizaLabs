@@ -8,12 +8,12 @@ export const targetRecordSchema = new Schema<records.targetRecord>(
     orders: [
       {
         order_id: { type: Number },
-        total: { type: Number },
+        total: { type: String },
         date: { type: String },
         products: [
           {
             product_id: { type: Number },
-            value: { type: Number },
+            value: { type: String },
           },
         ],
       },

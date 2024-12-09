@@ -4,7 +4,6 @@ import { Converter } from "@classes/converter/Converter";
 import { MemoryBroker } from "@classes/brokers/memory/MemoryBroker";
 import { DataBroker } from "@classes/brokers/DataBroker";
 import { insertMessage } from "@interfaces/records";
-import fs from "fs";
 
 test.suite("DataBroker:MemoryBroker", () => {
   
@@ -22,8 +21,8 @@ test.suite("DataBroker:MemoryBroker", () => {
       inserted_products: 3870,
     };
 
-    converter.on("data", (data) => {
-      const inputLog = db.appendRecords(converter.getTree());
+    converter.on("data", async (data) => {
+      const inputLog = await db.appendRecords(converter.getTree());
       db.getAllRecords().then((records) => {
         assert.equal(JSON.stringify(inputLog), JSON.stringify(expectedReport));
       });
@@ -56,7 +55,7 @@ test.suite("DataBroker:MemoryBroker", () => {
 });
 
 
-test.suite("DataBroker:FileBroker", () => {
+test.suite("DataBroker:MongoDBBroker", () => {
   
   test("Databroker can push all data transparently through file broker", () => {
     const memoryBroker = new MemoryBroker();
@@ -72,8 +71,8 @@ test.suite("DataBroker:FileBroker", () => {
       inserted_products: 3870,
     };
 
-    converter.on("data", (data) => {
-      const inputLog = db.appendRecords(converter.getTree());
+    converter.on("data", async (data) => {
+      const inputLog = await db.appendRecords(converter.getTree());
       db.getAllRecords().then((records) => {
         assert.equal(JSON.stringify(inputLog), JSON.stringify(expectedReport));
       });
