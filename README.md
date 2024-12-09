@@ -28,7 +28,7 @@ Então é possível, inserindo o mesmo arquivo mais de uma vez, inserir produtos
 
 Notar que para os dois modos de aplicação local é necessário um servidor mongodb default local
 
-No caso da execução em docker, é provido um servidor node no próprio container. É necessário ter o docker instalado na máquina.
+No caso da execução em docker, é provido um servidor mongo no próprio container. É necessário ter o docker instalado na máquina.
 
 **Em todos os casos é necessário ter o node.js (v22) instalado.**
 
