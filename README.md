@@ -1,6 +1,11 @@
 # teste Luizalabs
 ## Documentação da aplicação
 
+## Disclaimer
+
+Existem algumas práticas que não foram seguidas ao pé-da-letra. Como por exemplo a utilização de ENV_VARS para dados de conexão a DB, etc.
+Esses pequenos defeitos são conhecidos e nunca seriam enviados para produção sem correção.
+
 ## Persistência
 Foi utilizada uma abordagem baseada em inversão de dependência para a camada de persistência. Tanto que existem dois "brokers". Um mongodb e outro em memória. A aplicação está configurada para usar o broker MongoDB, porém existe a possibilidade de substituir a camada de persistência sem alterar em nada o resto da aplicação.
 
