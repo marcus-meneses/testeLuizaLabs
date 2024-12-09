@@ -1,5 +1,41 @@
 # teste Luizalabs
+## Documentação da aplicação
+
+## Persistência
+Foi utilizada uma abordagem baseada em inversão de dependência para a camada de persistência. Tanto que existem dois "brokers". Um mongodb e outro em memória. A aplicação está configurada para usar o broker MongoDB, porém existe a possibilidade de substituir a camada de persistência sem alterar em nada o resto da aplicação.
+
+## Modelagem
+A Abordagem para a inserção de dados foi o mapeamento direto da entrada para registros no DB. Antes da inserção existe toda a conversão dos dados para um array de objetos válidos para a inserção. Todas as entradas são consolidadadas sob o id do usuário fornecido, e sobrescritas utilizando o mesmo ID e nomes diferentes provocam erros (tratados e retornados)
+
+## Testes
+Foram criados testes usando o engine de testes próprio do node.js, Os testes contemplam a conversão dos dados down-top e a persistência usando
+o broker em memória como mock para o mongoDB. O coverage de testes não é 100%, e muitos testes estão como TODO ainda.
+
+## Como interagir
+Existe um arquivo chamado insomnia.json no root do projeto. Se trata de uma suite de requests para ser utilizada no insomnia. É necessário importar o arquivo para usar.
+
+## Considerações
+
+Existe uma falha lógica na inserção de produtos. Como aparentemente é necessário aceitar mais de uma entrada de produtos com o mesmo ID num pedido, é impossível saber se estão sendo inseridos dados duplicados (sem degradação de performance, que exigiria consulta para cada inserção de produto). E ainda com a verificação, não é possível garantir integridade, por n razões.
+Então é possível, inserindo o mesmo arquivo mais de uma vez, inserir produtos duplicados numa order. Ou usando arquivos diferentes com extrações diferentes dos dados originais.
+
+
+## Modo de usar
+### rodar testes: `npm run tests:all`
+### aplicação node local (para dev & debug): `npm run dev`
+### aplicação node local : `npm run prod`
+### container docker: `npm run docker:deploy`
+
+Notar que para os dois modos de aplicação local é necessário um servidor mongodb default local
+
+No caso da execução em docker, é provido um servidor node no próprio container. É necessário ter o docker instalado na máquina.
+
+**Em todos os casos é necessário ter o node.js (v22) instalado.**
+
+
 ## Documentação da API
+
+
 ### Base URL
 `localhost:3000`
 
@@ -13,7 +49,7 @@
 - **Descrição:** Retorna informações gerais da API.
 - **Headers:**  
   - `Content-Type`: `application/json`
-- **Resposta esperada:** Informações sobre o status ou configurações da API.
+- **Resposta esperada:** Informações sobre o status ou configurações da API. Texto simples.
 
 ---
 
@@ -24,8 +60,8 @@
 - **Headers:**  
   - `Content-Type`: `multipart/form-data`
 - **Body:** 
-
-- **Resposta esperada:**
+  - `dataset:<file data>`
+- **Resposta esperada:** Lista de informações sobre o upsert. (resposta 1)
   
 
 ---
@@ -36,7 +72,7 @@
 - **Descrição:** Retorna todos os registros armazenados.
 - **Headers:**  
   - `Content-Type`: `application/json`
-- **Resposta esperada:** Lista de registros em formato JSON.
+- **Resposta esperada:** Lista de registros em formato JSON. (resposta 2)
 
 ---
 
@@ -48,7 +84,7 @@
   - `id` (Obrigatório): Identificador do usuário.
 - **Headers:**  
   - `Content-Type`: `application/json`
-- **Resposta esperada:** Lista de registros associados ao usuário.
+- **Resposta esperada:** Lista de registros associados ao usuário. (resposta 2)
 
 ---
 
@@ -60,7 +96,7 @@
   - `id` (Obrigatório): Identificador do pedido.
 - **Headers:**  
   - `Content-Type`: `application/json`
-- **Resposta esperada:** Detalhes dos registros relacionados ao pedido.
+- **Resposta esperada:** Detalhes dos registros relacionados ao pedido. (resposta 2)
 
 ---
 
@@ -73,11 +109,23 @@
   - `eD` (Obrigatório): Data de fim no formato `YYYY-MM-DD`.
 - **Headers:**  
   - `Content-Type`: `application/json`
-- **Resposta esperada:** Lista de registros entre as datas fornecidas.
+- **Resposta esperada:** Lista de registros entre as datas fornecidas. (resposta 2)
 
 ---
 
-## Exemplo de Resposta (GET /records/*)
+## Exemplo de Resposta 1 (PUT /records)
+```json
+{
+    "success": true | false,
+    "message": "string",
+    "inserted_users": 0..n,
+    "inserted_orders": 0..n,
+    "inserted_products": 0..n
+}
+```
+
+
+## Exemplo de Resposta 2 (GET /records/*)
 ```json
 [
  {
@@ -98,17 +146,6 @@
     ]
 }, ...
 ]
-```
-
-## Exemplo de Resposta (PUT /records)
-```json
-{
-    "success": true | false,
-    "message": "string",
-    "inserted_users": 0..n,
-    "inserted_orders": 0..n,
-    "inserted_products": 0..n
-}
 ```
 
 ## Exemplo de Formulário HTML (PUT /records)
